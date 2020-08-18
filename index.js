@@ -50,10 +50,6 @@ app.listen(PORT, () => {
   console.log(`Listening on PORT ${PORT}`);
 });
 
-app.get('/', (req, res) => {
-  res.send('hello');
-});
-
 app.get('/api/persons', (req, res) => {
   res.json(persons);
 });
