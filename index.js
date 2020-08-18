@@ -1,4 +1,5 @@
 import express from 'express';
+import morgan from 'morgan';
 
 let persons = [
   {
@@ -37,6 +38,10 @@ const app = express();
 const PORT = 3001;
 
 app.use(express.json());
+
+// morgan.token('type', function (req, res) { return req.headers['content-type'] })
+morgan.token('body', function (req, res) { return JSON.stringify(req.body) })
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 
 app.listen(PORT, () => {
   console.log(`Listening on PORT ${PORT}`);
