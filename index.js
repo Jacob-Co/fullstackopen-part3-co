@@ -46,10 +46,6 @@ app.delete('/api/persons/:id', (req, res) => {
   res.status(204).end()
 })
 
-const generateId = () => {
-  return Math.ceil(Math.random() * 10 + 1) + persons.length;
-}
-
 app.post('/api/persons', (req, res) => {
   const body = req.body;
   if (!body.name || !body.number) return res.status(400).send({error: 'Missing name or number'});
