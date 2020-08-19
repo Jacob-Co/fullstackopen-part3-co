@@ -9,13 +9,13 @@ mongoose.connect(process.env.MONGODB_URI, {useNewUrlParser: true, useUnifiedTopo
 const personSchema = new mongoose.Schema({
   name: {
     type: String,
-    minlength: 2,
+    minlength: 3,
     required: true,
     unique: true
   },
   number: {
     type: String,
-    minlength: 1,
+    match: /(\D*\d\D*){8,}/,
     required: true
   }
 });
@@ -30,4 +30,6 @@ personSchema.set('toJSON', {
   }
 });
 
-module.exports = mongoose.model('Person', personSchema);
+Person = mongoose.model('Person', personSchema);
+
+module.exports = Person;
