@@ -84,13 +84,14 @@ app.put('/api/persons/:id', (req, res, next) => {
       if (updatedPerson) {
         res.json(updatedPerson)
       } else {
-        res.status(404).end();
+        res.status(404).json({ error: 'The item you are trying to update has been deleted'});
       }
     })
     .catch(e => next(e));
 })
 
 const errorHandler = (error, req, res, next) => {
+  console.log(`==${error.name}==`)
   console.log(error.message);
 
   if (error.name === 'CastError') {
