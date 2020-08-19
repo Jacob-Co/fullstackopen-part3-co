@@ -1,0 +1,42 @@
+import mongoose from 'mongoose';
+
+if (process.argv.length < 3) {
+  console.log('Please input db password');
+  process.exit(1);
+}
+
+const password = process.env.MONGODB_URI;
+
+const url = `mongodb+srv://carrot:${password}@cluster0.iholn.mongodb.net/phonebook?retryWrites=true&w=majority`;
+
+mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true})
+  .catch(e => console.log('Error in accessing database, please check password or network connection'));
+
+const personSchema = new mongoose.Schema({
+  name: String,
+  number: String
+});
+
+const Person = mongoose.model('Person', personSchema);
+
+if (process.argv.length >= 5) {
+  const [name, number]  = process.argv.slice(3);
+  
+  const person = new Person({
+    name,
+    number
+  });
+  
+  person.save()
+    .then(result => {
+      console.log(`added ${result.name} number ${result.number} to phonebook`);
+      mongoose.connection.close();
+    });
+} else {
+  Person.find({})
+    .then(results => {
+      console.log('phonebook:');
+      results.forEach(result => console.log(`${result.name} ${result.number}`))
+      mongoose.connection.close();
+    });
+}
