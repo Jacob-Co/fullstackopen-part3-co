@@ -39,11 +39,10 @@ app.get('/api/persons/:id', (req, res) => {
   Person.findById(req.params.id).then(person => res.json(person));
 });
 
-app.delete('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id);
-  persons = persons.filter(person => person.id !== id);
-  
-  res.status(204).end()
+app.delete('/api/persons/:id', (req, res, next) => {
+  Person.findByIdAndDelete(req.params.id)
+    .then(result => res.status(204).end())
+    .catch(e => next(e));
 })
 
 app.post('/api/persons', (req, res) => {
@@ -62,3 +61,15 @@ app.post('/api/persons', (req, res) => {
 
   newPerson.save().then(person => res.json(person));
 })
+
+const errorHandler = (error, req, res, next) => {
+  console.log(error.message);
+
+  if (error.name === 'CastError') {
+    return res.status(400).send({ error: 'malformatted id' });
+  }
+
+  next(error);
+}
+
+app.use(errorHandler);
